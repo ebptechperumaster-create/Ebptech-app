@@ -23,7 +23,7 @@ Hecho el 2 de noviembre de 2026: la configuración pública de la app web está 
 
 1. Abre https://console.cloud.google.com/iam-admin/serviceaccounts y elige el proyecto.
 2. **Crear cuenta de servicio** › nombre `github-publicar` › Crear y continuar.
-3. Dale los roles **Editor** y **Usuario de cuenta de servicio** › Listo.
+3. Dale los roles **Editor**, **Usuario de cuenta de servicio** y **Administrador de Cloud Functions** › Listo. (Si no aparece la casilla de roles, agrégalos después en IAM › Otorgar acceso.)
 4. Entra a la cuenta creada › pestaña **Claves** › Agregar clave › **Crear clave nueva** › JSON. Se descarga un archivo.
 5. En GitHub: Settings › Secrets and variables › Actions › pestaña **Secrets** › **New repository secret**. Nombre `FIREBASE_SERVICE_ACCOUNT`, y como valor pega el contenido completo del archivo JSON.
 6. Borra el archivo JSON de tu computadora. No lo envíes por chat ni correo.
