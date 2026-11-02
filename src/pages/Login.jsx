@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../lib/auth';
+import CampoContrasena from '../components/CampoContrasena';
 
 export default function Login() {
   const { entrar } = useAuth();
@@ -31,7 +32,7 @@ export default function Login() {
           <input value={usuario} onChange={(e) => setUsuario(e.target.value)} autoComplete="username" autoCapitalize="none" required />
         </label>
         <label>Contraseña
-          <input type="password" value={contrasena} onChange={(e) => setContrasena(e.target.value)} autoComplete="current-password" required />
+          <CampoContrasena value={contrasena} onChange={(e) => setContrasena(e.target.value)} autoComplete="current-password" required />
         </label>
         {error && <p className="error">{error}</p>}
         <button className="primario" disabled={enviando}>{enviando ? 'Ingresando…' : 'Ingresar'}</button>
