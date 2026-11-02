@@ -7,7 +7,8 @@ import { google } from 'googleapis';
 import { Readable } from 'node:stream';
 
 initializeApp();
-setGlobalOptions({ region: 'southamerica-east1', maxInstances: 5 });
+// invoker 'public': la app llama a las funciones desde el navegador; cada función valida al usuario y su rol.
+setGlobalOptions({ region: 'southamerica-east1', maxInstances: 5, invoker: 'public' });
 
 const db = getFirestore();
 const DOMINIO = 'usuarios.ebptech.app';
