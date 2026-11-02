@@ -1,0 +1,13 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "marcaciones",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "creado", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

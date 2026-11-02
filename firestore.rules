@@ -1,0 +1,45 @@
+rules_version = '2';
+// Matriz de permisos aprobada (Especificación App Ebptech, 2 nov 2026).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function autenticado() { return request.auth != null; }
+    function yo() { return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data; }
+    function rol() { return yo().rol; }
+    function veTodo() { return rol() in ['gerente', 'desarrollador']; }
+    function compartenArea(areas) { return rol() == 'administrador' && areas.hasAny(yo().areas); }
+
+    // Perfiles: se crean y editan solo desde las funciones del servidor.
+    match /usuarios/{uid} {
+      allow read: if autenticado() && (request.auth.uid == uid || veTodo());
+      allow write: if false;
+    }
+
+    // Registros de ingreso, inicio/fin de trabajo y salida, con ubicación.
+    match /marcaciones/{id} {
+      allow create: if autenticado()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.creado == request.time
+        && request.resource.data.lat is number && request.resource.data.lng is number
+        && request.resource.data.tipo in ['ingreso', 'inicio_trabajo', 'fin_trabajo', 'salida'];
+      allow read: if autenticado() && (resource.data.uid == request.auth.uid || veTodo() || compartenArea(resource.data.areas));
+      allow update: if false;
+      allow delete: if autenticado() && (veTodo() || compartenArea(resource.data.areas));
+    }
+
+    // Ubicación en vivo del personal en turno (un documento por usuario).
+    match /ubicaciones/{uid} {
+      allow write: if autenticado() && request.auth.uid == uid;
+      allow read: if autenticado() && (request.auth.uid == uid || veTodo() || compartenArea(resource.data.areas));
+    }
+
+    match /drive_subidas/{id} {
+      allow read: if autenticado() && veTodo();
+      allow write: if false;
+    }
+
+    match /config/{doc} {
+      allow read: if autenticado();
+      allow write: if autenticado() && rol() == 'desarrollador';
+    }
+  }
+}
