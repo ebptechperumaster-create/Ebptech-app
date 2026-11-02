@@ -1,0 +1,69 @@
+name: Publicar en Firebase
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: publicar-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Compilar la app
+        run: npm run build
+        env:
+          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ vars.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+      - name: Revisar funciones
+        run: cd functions && npm install --no-audit --no-fund && node --check index.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  publicar:
+    needs: construir
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      TIENE_CLAVE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
+      PROYECTO: ${{ vars.VITE_FIREBASE_PROJECT_ID || 'ebptech-app' }}
+    steps:
+      - name: Falta la clave de Firebase
+        if: env.TIENE_CLAVE != 'true'
+        run: echo "::notice::No se publica porque falta el secreto FIREBASE_SERVICE_ACCOUNT. Ver docs/PUBLICAR.md."
+      - uses: actions/checkout@v4
+        if: env.TIENE_CLAVE == 'true'
+      - uses: actions/setup-node@v4
+        if: env.TIENE_CLAVE == 'true'
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        if: env.TIENE_CLAVE == 'true'
+        with:
+          name: dist
+          path: dist
+      - uses: google-github-actions/auth@v2
+        if: env.TIENE_CLAVE == 'true'
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - name: Publicar app, reglas y funciones
+        if: env.TIENE_CLAVE == 'true'
+        run: |
+          cd functions && npm install --no-audit --no-fund && cd ..
+          npx --yes firebase-tools@15 deploy --project "$PROYECTO" --non-interactive --force
