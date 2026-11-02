@@ -28,4 +28,7 @@ if (usarEmuladores) {
 
 // Los usuarios entran con "usuario"; Firebase necesita un correo, así que se arma uno interno.
 export const DOMINIO_USUARIOS = 'usuarios.ebptech.app';
-export const correoDeUsuario = (usuario) => `${usuario.trim().toLowerCase()}@${DOMINIO_USUARIOS}`;
+export const correoDeUsuario = (usuario) => {
+  const u = usuario.trim().toLowerCase();
+  return u.includes('@') ? u : `${u}@${DOMINIO_USUARIOS}`;
+};
