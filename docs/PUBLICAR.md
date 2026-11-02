@@ -17,24 +17,13 @@ En la consola de Firebase, dentro del proyecto:
 
 ## 3. Registrar la app web
 
-⚙️ Configuración del proyecto › General › **Tus apps** › icono `</>` (Web) › nombre "Ebptech App" › Registrar. Aparece un bloque `firebaseConfig` con `apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId` y `appId`. Estos datos no son secretos.
-
-En GitHub: repositorio › **Settings** › **Secrets and variables** › **Actions** › pestaña **Variables** › **New repository variable**, y crea estas seis:
-
-| Variable | Valor de firebaseConfig |
-| --- | --- |
-| `VITE_FIREBASE_API_KEY` | apiKey |
-| `VITE_FIREBASE_AUTH_DOMAIN` | authDomain |
-| `VITE_FIREBASE_PROJECT_ID` | projectId |
-| `VITE_FIREBASE_STORAGE_BUCKET` | storageBucket |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | messagingSenderId |
-| `VITE_FIREBASE_APP_ID` | appId |
+Hecho el 2 de noviembre de 2026: la configuración pública de la app web está en `.env.production`. Si se registra otra app web, actualiza ese archivo.
 
 ## 4. Crear la clave de publicación (secreta)
 
 1. Abre https://console.cloud.google.com/iam-admin/serviceaccounts y elige el proyecto.
 2. **Crear cuenta de servicio** › nombre `github-publicar` › Crear y continuar.
-3. Dale los roles **Editor** y **Usuario de cuenta de servicio** › Listo.
+3. Dale los roles **Editor**, **Usuario de cuenta de servicio** y **Administrador de Cloud Functions** › Listo. (Si no aparece la casilla de roles, agrégalos después en IAM › Otorgar acceso.)
 4. Entra a la cuenta creada › pestaña **Claves** › Agregar clave › **Crear clave nueva** › JSON. Se descarga un archivo.
 5. En GitHub: Settings › Secrets and variables › Actions › pestaña **Secrets** › **New repository secret**. Nombre `FIREBASE_SERVICE_ACCOUNT`, y como valor pega el contenido completo del archivo JSON.
 6. Borra el archivo JSON de tu computadora. No lo envíes por chat ni correo.

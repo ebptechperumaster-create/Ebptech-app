@@ -1,0 +1,43 @@
+name: Asignar rol a un usuario
+
+# Se ejecuta a mano (Actions › "Asignar rol a un usuario" › Run workflow).
+# Crea o actualiza el perfil usuarios/{uid} en Firestore. Úsalo para el primer desarrollador;
+# los demás usuarios se crean desde la app.
+on:
+  workflow_dispatch:
+    inputs:
+      uid:
+        description: UID del usuario (Firebase › Authentication)
+        required: true
+      usuario:
+        description: Nombre de usuario (la parte antes de @usuarios.ebptech.app)
+        required: true
+      nombre:
+        description: Nombre completo
+        required: true
+      rol:
+        description: Rol
+        required: true
+        default: desarrollador
+        type: choice
+        options: [desarrollador, gerente, administrador, tecnico]
+
+jobs:
+  asignar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - run: cd functions && npm install --no-audit --no-fund
+      - name: Guardar perfil
+        env:
+          UID: ${{ inputs.uid }}
+          USUARIO: ${{ inputs.usuario }}
+          NOMBRE: ${{ inputs.nombre }}
+          ROL: ${{ inputs.rol }}
+        run: node scripts/asignar-rol.mjs

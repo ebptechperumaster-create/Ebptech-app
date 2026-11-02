@@ -22,13 +22,6 @@ jobs:
       - run: npm ci
       - name: Compilar la app
         run: npm run build
-        env:
-          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ vars.VITE_FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
       - name: Revisar funciones
         run: cd functions && npm install --no-audit --no-fund && node --check index.js
       - uses: actions/upload-artifact@v4
@@ -42,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TIENE_CLAVE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
-      PROYECTO: ${{ vars.VITE_FIREBASE_PROJECT_ID || 'ebptech-app' }}
+      PROYECTO: ebptech-app
     steps:
       - name: Falta la clave de Firebase
         if: env.TIENE_CLAVE != 'true'
