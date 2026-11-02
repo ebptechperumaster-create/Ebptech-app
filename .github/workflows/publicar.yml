@@ -60,3 +60,6 @@ jobs:
         run: |
           cd functions && npm install --no-audit --no-fund && cd ..
           npx --yes firebase-tools@15 deploy --project "$PROYECTO" --non-interactive --force
+      - name: Configurar carpetas del Drive por área
+        if: env.TIENE_CLAVE == 'true'
+        run: node scripts/configurar-drive.mjs
