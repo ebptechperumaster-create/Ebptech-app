@@ -12,7 +12,13 @@ export default function Login() {
     e.preventDefault();
     setError(''); setEnviando(true);
     try { await entrar(usuario, contrasena); }
-    catch { setError('Usuario o contraseña incorrectos.'); }
+    catch (err) {
+      const c = err?.code || '';
+      if (c.includes('invalid-credential') || c.includes('wrong-password') || c.includes('user-not-found') || c.includes('invalid-email')) setError('Usuario o contraseña incorrectos.');
+      else if (c.includes('too-many-requests')) setError('Demasiados intentos. Espera unos minutos e intenta de nuevo.');
+      else if (c.includes('network')) setError('Sin conexión a internet.');
+      else setError(`No se pudo ingresar (${c || 'error desconocido'}).`);
+    }
     finally { setEnviando(false); }
   };
 
