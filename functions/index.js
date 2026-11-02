@@ -100,9 +100,28 @@ async function carpetaPermitida(yo, area, carpetaId) {
   return carpetaId;
 }
 
+
+// Convierte los errores de la API de Drive en mensajes claros para la app.
+function errorDrive(e) {
+  if (e instanceof HttpsError) return e;
+  console.error('Error de Drive:', e?.response?.data || e);
+  const razon = e?.errors?.[0]?.reason || e?.response?.data?.error?.errors?.[0]?.reason || '';
+  const texto = String(e?.message || '');
+  if (razon === 'accessNotConfigured' || /has not been used|is disabled|SERVICE_DISABLED/i.test(texto))
+    return new HttpsError('failed-precondition', 'La API de Google Drive no está activada en el proyecto de Firebase.');
+  if (razon === 'storageQuotaExceeded' || /storage quota/i.test(texto))
+    return new HttpsError('resource-exhausted', 'El Drive no acepta archivos subidos por la cuenta de la app (sin cuota de almacenamiento).');
+  if (e?.code === 404 || razon === 'notFound')
+    return new HttpsError('not-found', 'La app no puede ver esa carpeta del Drive. Revisa que "1-EBPTECH 2025" esté compartida con la cuenta de la app.');
+  if (e?.code === 403)
+    return new HttpsError('permission-denied', `Drive negó el acceso: ${texto.slice(0, 200)}`);
+  return new HttpsError('internal', `Error de Drive: ${texto.slice(0, 200) || 'desconocido'}`);
+}
+const conDrive = (fn) => async (req) => { try { return await fn(req); } catch (e) { throw errorDrive(e); } };
+
 const escapar = (t) => String(t).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
-export const driveListar = onCall(async (req) => {
+export const driveListar = onCall(conDrive(async (req) => {
   const yo = await perfilDe(req);
   const { area, carpetaId, busqueda } = req.data || {};
   const carpeta = await carpetaPermitida(yo, area, carpetaId);
@@ -115,9 +134,9 @@ export const driveListar = onCall(async (req) => {
     supportsAllDrives: true, includeItemsFromAllDrives: true
   });
   return { archivos: data.files || [] };
-});
+}));
 
-export const driveSubir = onCall(async (req) => {
+export const driveSubir = onCall(conDrive(async (req) => {
   const yo = await perfilDe(req);
   const { area, carpetaId, nombre, mimeType, contenido } = req.data || {};
   if (!nombre || !contenido) throw new HttpsError('invalid-argument', 'Falta el archivo.');
@@ -131,4 +150,4 @@ export const driveSubir = onCall(async (req) => {
   });
   await db.collection('drive_subidas').add({ uid: yo.uid, nombre: yo.nombre, area, archivoId: data.id, archivo: data.name, creado: FieldValue.serverTimestamp() });
   return data;
-});
+}));

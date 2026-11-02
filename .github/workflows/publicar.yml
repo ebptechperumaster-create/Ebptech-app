@@ -55,6 +55,12 @@ jobs:
         if: env.TIENE_CLAVE == 'true'
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+        if: env.TIENE_CLAVE == 'true'
+      - name: Activar la API de Google Drive
+        if: env.TIENE_CLAVE == 'true'
+        continue-on-error: true
+        run: gcloud services enable drive.googleapis.com --project "$PROYECTO"
       - name: Publicar app, reglas y funciones
         if: env.TIENE_CLAVE == 'true'
         run: |
