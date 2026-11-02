@@ -17,18 +17,7 @@ En la consola de Firebase, dentro del proyecto:
 
 ## 3. Registrar la app web
 
-⚙️ Configuración del proyecto › General › **Tus apps** › icono `</>` (Web) › nombre "Ebptech App" › Registrar. Aparece un bloque `firebaseConfig` con `apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId` y `appId`. Estos datos no son secretos.
-
-En GitHub: repositorio › **Settings** › **Secrets and variables** › **Actions** › pestaña **Variables** › **New repository variable**, y crea estas seis:
-
-| Variable | Valor de firebaseConfig |
-| --- | --- |
-| `VITE_FIREBASE_API_KEY` | apiKey |
-| `VITE_FIREBASE_AUTH_DOMAIN` | authDomain |
-| `VITE_FIREBASE_PROJECT_ID` | projectId |
-| `VITE_FIREBASE_STORAGE_BUCKET` | storageBucket |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | messagingSenderId |
-| `VITE_FIREBASE_APP_ID` | appId |
+Hecho el 2 de noviembre de 2026: la configuración pública de la app web está en `.env.production`. Si se registra otra app web, actualiza ese archivo.
 
 ## 4. Crear la clave de publicación (secreta)
 
