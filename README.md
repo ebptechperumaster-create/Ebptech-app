@@ -32,13 +32,7 @@ Abre http://127.0.0.1:5000. Sin `.env.local`, la app se conecta sola a los emula
 
 ## Puesta en producción
 
-1. Crea un proyecto en https://console.firebase.google.com (plan Blaze, necesario para las funciones; tiene cuota gratuita).
-2. Activa Authentication › Correo/contraseña, crea Firestore en la región `southamerica-east1`.
-3. Registra una app web y copia sus datos a `.env.local` (ver `.env.example`).
-4. `firebase use --add` y `firebase deploy`.
-5. Comparte la carpeta raíz del Drive "1-EBPTECH 2025" como Editor con la cuenta de servicio de las funciones (`<id-proyecto>@appspot.gserviceaccount.com`) y llena `config/drive` con el id de la carpeta de cada área:
-   `{ raiz: '1WwLG55jHMUSAaqvCwLaWGetc6VCP8nkJ', areas: { sst: '…', operaciones: '…', … } }`.
-6. Crea el primer usuario desarrollador desde la consola (Authentication + documento `usuarios/{uid}` con `rol: 'desarrollador'`); los demás se crean desde la app.
+Cada cambio en `main` se publica solo con GitHub Actions. La configuración inicial (proyecto, variables, clave, primer usuario y Drive) está paso a paso en [docs/PUBLICAR.md](docs/PUBLICAR.md).
 
 ## Instalar en Android
 
