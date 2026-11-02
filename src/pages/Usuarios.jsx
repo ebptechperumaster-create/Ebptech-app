@@ -3,6 +3,7 @@ import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { db, functions } from '../lib/firebase';
 import { useAuth } from '../lib/auth';
+import CampoContrasena from '../components/CampoContrasena';
 import { puede, ROLES, ROL_NOMBRE } from '../lib/permisos';
 import { AREAS } from '../config/menus';
 
@@ -45,7 +46,7 @@ export default function Usuarios() {
         <h2>Nuevo usuario</h2>
         <label>Nombre completo<input value={form.nombre} onChange={cambiar('nombre')} required /></label>
         <label>Usuario<input value={form.usuario} onChange={cambiar('usuario')} pattern="[a-zA-Z0-9._\-]{3,30}" title="3 a 30 letras, números, punto o guion" required /></label>
-        <label>Contraseña inicial<input type="password" value={form.contrasena} onChange={cambiar('contrasena')} minLength={8} required /></label>
+        <label>Contraseña inicial<CampoContrasena value={form.contrasena} onChange={cambiar('contrasena')} minLength={8} required /></label>
         <label>Rol
           <select value={form.rol} onChange={cambiar('rol')}>
             {ROLES.filter((r) => r !== 'desarrollador' || perfil.rol === 'desarrollador').map((r) => <option key={r} value={r}>{ROL_NOMBRE[r]}</option>)}
