@@ -1,0 +1,23 @@
+{
+  "raiz": "1WwLG55jHMUSAaqvCwLaWGetc6VCP8nkJ",
+  "areas": {
+    "inicio": "1hx0w3tbLtHrlcexX6kaMRMjSvEKqRwcB",
+    "sst": "1Xe_1XOf537JUaATWfyPA5CIslJLn6R2Z",
+    "comercial": "1XTifFo5G-okT8UOALBcY42ky30-4R1C6",
+    "logistica": "1hv0wtv2vaRY0ozr_wrfODLCSu5YwkIf4",
+    "operaciones": "1XNW8tpQOP_Xcu2A-YsFRsm_d_-2I3Lc7",
+    "administracion": "1XNT-ikjXuWRlwljJ1mqDsRw0UUi_PPE4",
+    "contabilidad": "1X_Q94mC_8vbsbGmqPoi8_Fon-_GwJslj",
+    "gerencia": "1XC7bzIPBS_8Xh4UBAeE9q1XGyxuz7rCq"
+  },
+  "_nombres": {
+    "inicio": "02 OPERACIONES / 02-2 Servicios",
+    "sst": "04 SIG / 04-2 SST",
+    "comercial": "03 COMERCIAL",
+    "logistica": "02 OPERACIONES / 02-1 Logistica",
+    "operaciones": "02 OPERACIONES",
+    "administracion": "01 ADMINISTRACIÓN",
+    "contabilidad": "01 ADMINISTRACIÓN / 01-2 CONTABILIDAD",
+    "gerencia": "00 GERENCIA"
+  }
+}
